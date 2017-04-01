@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>js-04</title>
+  <style>
+    /*稍微美化下*/
+    *{margin:0;padding:0}
+    input[type='text']{heigt:28px;line-height: 28px;border:1px solid #ddd}
+    button{background: #fefefe; border:1px solid #ddd;padding: 5px 8px;}
+    #item-list span{display: inline-block;padding:4px;line-height: 24px;background: #f00;color:#fff;font-weight: 600;text-align: center;margin-left:12px;}
+  </style>
+</head>
+<body>
+  <div class="form-group">
+    <input type="text" id="inp-text" />
+    <button id="btn1">左侧入</button>
+    <button id="btn2">右侧入</button>
+    <button id="btn3">左侧出</button>
+    <button id="btn4">右侧出</button>
+  </div>
+  <div id="item-list"></div>
+  <script>
+    //获取元素
+    function id(id){
+      return document.getElementById(id);
+    }
+    /**
+     * 渲染列表
+     */ 
+    function render(data){
+      id('item-list').innerHTML = '';
+      data.forEach(function (el, index) {
+        var span = document.createElement('span');
+        span.innerHTML = el;
+        id('item-list').appendChild(span);
+      })
+    }
+    var globelData = [];
+    id('btn1').onclick = function () { //左侧
+      var value = id('inp-text').value;
+      globelData.unshift(value ? value : 0);
+      render(globelData);
+    }
+    id('btn2').onclick = function () { //右侧
+      var value = id('inp-text').value;
+      globelData.push(value ? value : 0);
+      render(globelData);
+    }
+    id('btn3').onclick = function () {//左出
+      globelData.splice(0, 1);
+      render(globelData);
+    }
+    id('btn4').onclick = function () {//左出
+      globelData.pop();
+      render(globelData);
+    }
+  </script>
+</body>
+</html>
