@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>js-04</title>
+  <style>
+    /*稍微美化下*/
+    .wrapper{
+	width: 800px;
+	margin: auto;
+}
+#num-list{
+	display: flex;
+	height: 520px;
+	flex-flow: row nowrap;
+	align-items: flex-end;
+}
+#myForm{
+	display: inline-block;
+  background: #dedede;
+}
+
+#num-list > div{
+display: inline-block;
+margin: 1px;
+width: 40px;
+height: 20px;
+text-align: center;
+background-color: #f00
+}  
+</style>
+</head>
+<body>
+  <div class="wrapper">
+	<fieldset>
+	<legend>表单输入</legend>
+	<form id="myForm">
+		<input id="num-input"type="text"></input>
+	</form>
+	<button id="btn1">左侧入</button>
+	<button id="btn2">右侧入</button>
+	<button id="btn3">左侧出</button>
+	<button id="btn4">右侧出</button>
+	<button id="sort">冒泡排序</button>
+	</fieldset>
+	<div id="num-list">
+
+	</div>
+</div>
+<script>
+(function () {
+  var dataList = [];
+  var state = []; //每次排序只有的数组
+  var int = null;
+  function id(id){
+    return document.getElementById(id);
+  }
+  /* 
+   * 检测input的值
+   */
+  function checkValue(){
+    var value = id('num-input').value;
+    if(value < 10 || value > 100){
+      alert('只能输入10-100之间的数字');
+      return false;
+    }
+    if(dataList.length > 60){
+      alert('不能超过60个数字')
+      return false;
+    }
+    return value;
+  }
+
+  //渲染
+  function render(){
+    if(dataList.length > 0){
+      var box = id('num-list');
+      var html = '';
+      for(var i=0; i < dataList.length; i++ ){
+        html += `<div style="height:${dataList[i] * 5}px;line-height:${dataList[i] * 5}px">${dataList[i]}</div>`;
+      }
+      box.innerHTML = html;
+    }
+  }
+
+  //提示当前对比
+  function now(start, end){
+    id('one').innerHTML = start;
+    id('two').innerHTML = end;
+  }
+  
+  //冒泡排序
+  function sortBubble(arr){
+    for (var i = arr.length-1; i > 0; i--) {
+      for(var j = 0; j < i; j++){
+        if (arr[j] * 1 > arr[j+1] * 1) {
+          var temp = arr[j];
+          arr[j] = arr[j+1];
+          arr[j+1] = temp;
+          //将每一次交换的数组存到state中，state是数组的数组
+          state.push(JSON.parse(JSON.stringify(arr)));
+        }
+      }
+    }
+  }
+
+  //排序渲染
+  function sortRender(){
+    var numList = id('num-list');
+    var s = state.shift();
+    numList.innerHTML = '';
+    if (s !== undefined) {
+      for(var m = 0; m < s.length; m++){
+        var h = s[m];
+        numList.innerHTML += `<div style="height:${h*5}px;line-height:${h*5}px">${h}</div>`;
+      }
+    }
+      //避免state为空之后，页面也变空
+    else{
+      render();
+      window.clearInterval(int);
+    }
+  }
+
+  //dom操作
+  function init(){
+    id('btn1').onclick = function () { //左侧
+      if(checkValue()){
+        var value = checkValue();
+        dataList.unshift(value);
+        render(dataList);
+      }
+     
+    }
+    id('btn2').onclick = function () { //右侧
+      if(checkValue()){
+        var value = checkValue();
+        dataList.push(value);
+        render(dataList);
+      }
+    }
+    id('btn3').onclick = function () {//左出
+      dataList.splice(0, 1);
+      render(dataList);
+    }
+    id('btn4').onclick = function () {//左出
+      dataList.pop();
+      render(dataList);
+    }
+    id('sort').onclick = function () {
+      sortBubble(dataList);
+      int = setInterval(sortRender, 1000);
+    }
+  }
+  init();
+})()
+</script>
+</body>
+</html>
