@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>第六天</title>
+  <style>
+.button4
+{
+  width:80px;
+  height:30px;
+  border:1px solid #0bd9e0;
+  background:#0bd9e0;
+  color:white;
+  border-radius:4px;
+}
+#input4
+{
+  border-radius:4px;
+  position:relative;
+  top:10px;
+  padding:5px;
+  font-size:15px;
+}
+#list4 li
+{
+  line-height:40px;
+  float:left;
+  margin-left:5px;
+  margin-top:5px;
+  list-style-type:none;
+  padding:0 7px;
+  height:40px;
+  color:white;
+  background:#0bd9e0;
+  border-radius:4px;
+  text-align:center;
+  cursor:pointer;
+}
+#search61
+{
+  width:320px;
+  height:25px;
+  border-radius:4px;
+  border:1px solid #ddd;
+}
+  </style>
+</head>
+<body>
+  <div class="warrp">
+      <textarea rows="10" cols="50" id="input4" placeholder="请输入数字、中文、英文，可以通过用回车，逗号，顿号，空格等符号作为不同内容的间隔"></textarea>
+      <br /><br />
+          <button id="btn1" class="button4">左侧入</button>
+          <button id="btn2" class="button4">右侧入</button>
+          <button id="btn3" class="button4">左侧出</button>
+          <button id="btn4" class="button4">右侧出</button>
+      <button id="clear" class="button4">清空方块</button>
+      <br /><br />
+      <input type="text" id="search61" placeholder="请输入搜索关键字">
+      <button id="search" class="button4">搜索</button>
+      <button id="clearSearch" class="button4">清除搜索</button>
+   <ul id="list4" name="list4"></ul>
+  </div>
+  <script>
+    var dataList = [];
+    //获取元素
+    function $(id){
+      return typeof id == 'object' ? id : document.querySelector(id);
+    }
+    //获取数据，并且匹配
+    function getData(){
+      var value = $("#input4").value;
+      var reg = /(\w+|[\u4e00-\u9fa5]+)(\r|\t|,|，| |、|)/g;
+      if(value.match(reg)){
+        var arr1=value.replace(reg," $1").split(" ");
+        return arr1;
+      }else{
+        var arr
+        arr.push(value);
+        return arr;
+      }
+    }
+
+    function renderOne(val){
+      var li = document.createElement('li');
+      li.innerHTML = val;
+      $('#list4').appendChild(li)
+    }
+
+    function renderList(){
+      $('#list4').innerHTML = '';
+      for(var i=0;i<dataList.length;i++){
+        if(dataList[i] != '')
+          renderOne(dataList[i]);
+      }
+    }
+
+    function init(){
+      $('#btn1').onclick = function (e) {
+        var data = getData();
+        data.forEach(function(el, index){
+          dataList.unshift(el)
+        })
+        renderList();
+      }
+      $("#btn2").onclick = function (e) {
+        var data = getData();
+        data.forEach(function (el, index) {
+          dataList.push(el);
+        });
+        renderList();
+      }
+      $('#btn3').onclick = function (e) {
+         dataList.splice(0, 1);
+         renderList();
+      }
+      $("#btn4").onclick = function (e) {
+        dataList.pop();
+        render(dataList);
+      }
+      $("#search").onclick = function (e) {
+        var list4=$("#list4");
+        var search61=$("#search61").value;
+        for(var i=0;i<list4.childNodes.length;i++)
+          {
+            if(list4.childNodes[i].innerHTML.match(search61))
+              {
+                list4.childNodes[i].style.backgroundColor="black";
+              }
+          }
+      }
+      $("#clearSearch").onclick = function (e) {
+        renderList();
+      }
+      $("#clear").onclick = function (e) {
+        dataList = [];
+        renderList();
+      }
+     }
+    init();
+  </script>
+</body>
+</html>
